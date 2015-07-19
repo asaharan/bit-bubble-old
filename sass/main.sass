@@ -1,0 +1,36 @@
+$roboto-font-path: "../build/fonts"
+@import "../com/roboto-fontface/css/roboto-fontface"
+@import "variables"
+@import "base"
+.gameContainer
+  *,*:after,*:before
+    font-family: 'roboto-regular'
+
+  .gridContainerOuter
+    background-color: $gridContainerOuterBackgroundColor
+    border: solid $gridContainerOuterBorderWidth $gridContainerOuterBorderColor
+    position: relative
+
+    .gridContainerInner
+      position: absolute
+      left: 0
+      top: 0
+      .backgroundGrid
+        position: absolute
+        left: 0
+        top: 0
+
+      .mainGrid
+        position: absolute
+        left: 0
+        top: 0
+
+        .tile
+          position: absolute
+          background-color: $tileBackgroundColor
+          color: $tileColor
+
+        .bit
+          position: absolute
+          background-color: $bitBackgroundColor
+          color: $bitColor

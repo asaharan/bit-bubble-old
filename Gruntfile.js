@@ -48,6 +48,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-sass');
-    //require('load-grunt-tasks')(grunt);
+    grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.registerTask('default',['sass','concat','uglify','watch'])
 }

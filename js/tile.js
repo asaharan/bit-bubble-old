@@ -9,24 +9,36 @@ function Tile(x,y,value){
     this.x=x;
     this.y=y;
     this.value=value;
+    this.nextValue=null;
     this.isVisible=true;
     this.htmlNode=null;
+    this.classList=['tile',this.positionClass(),'visible','new'];//4th class for fixed and 5th for updated
 }
 Tile.prototype.position= function () {
     return {x:this.x,y:this.y};
 };
-
 /*
 * If isVisible show it else hide it
 * @this {Tile}
 * */
 Tile.prototype.applyChanges= function () {
-    var visibleClassName='visible',removedClassName='removed';
+    var self=this;
     if(this.isVisible){
-        this.htmlNode.classList.add(removedClassName).remove(visibleClassName);
+        this.classList[2]='visible';
     }else{
-        this.htmlNode.classList.remove(removedClassName).add(visibleClassName);
+        this.classList[2]='invisible';
     }
+    if(this.nextValue!=null){
+        this.htmlNode.textContent=this.nextValue;
+        this.classList[5]='updated';
+        this.value=this.nextValue;
+        this.nextValue=null;
+        setTimeout(function () {
+            self.classList[5]='';
+            self.applyClasses();
+        },200)
+    }
+    this.applyClasses();
 };
 Tile.prototype.positionClass= function () {
     return 'tile-'+this.x+'-'+this.y;
@@ -34,10 +46,11 @@ Tile.prototype.positionClass= function () {
 Tile.prototype.makeHTMLNode= function () {
     var tileElement=document.createElement('div');
     this.htmlNode=tileElement;
-    tileElement.textContent=tile.value;
-    var classes=['tile',this.positionClass(),'new'];
-    this.applyClasses(classes);
+    tileElement.textContent=this.value;
+    tileElement.setAttribute('id',this.positionClass());
+    this.htmlNode.setAttribute('class',this.classList.join(' '));
+    return this.htmlNode;
 };
-Tile.prototype.applyClasses=function(classes){
-    element.setAttribute('class',classes.join(' '));
+Tile.prototype.applyClasses=function(){
+    this.htmlNode.setAttribute('class',this.classList.join(' '));
 };

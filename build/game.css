@@ -150,9 +150,9 @@ body {
           border-radius: 3px;
           z-index: 100;
           opacity: 1;
-          -webkit-transition: all 100ms ease, z-index 1600ms ease, opacity -396ms ease;
-          -moz-transition: all 100ms ease, z-index 1600ms ease, opacity -396ms ease;
-          transition: all 100ms ease, z-index 1600ms ease, opacity -396ms ease; }
+          -webkit-transition: all 100ms ease, z-index 400ms ease, opacity 400ms ease;
+          -moz-transition: all 100ms ease, z-index 400ms ease, opacity 400ms ease;
+          transition: all 100ms ease, z-index 400ms ease, opacity 400ms ease; }
           .gameContainer .gridContainerOuter .gridContainerInner .mainGrid .tile.invisible {
             z-index: -100;
             opacity: 0;
@@ -161,14 +161,16 @@ body {
             -ms-transform: scale(0.6);
             -o-transform: scale(0.6);
             transform: scale(0.6); }
-          .gameContainer .gridContainerOuter .gridContainerInner .mainGrid .tile.fixed {
-            background-color: #000000; }
+          .gameContainer .gridContainerOuter .gridContainerInner .mainGrid .tile.fixed.fixed {
+            background-color: #000000;
+            z-index: 505; }
           .gameContainer .gridContainerOuter .gridContainerInner .mainGrid .tile.updated {
-            -webkit-transform: scale(1.3);
-            -moz-transform: scale(1.3);
-            -ms-transform: scale(1.3);
-            -o-transform: scale(1.3);
-            transform: scale(1.3); }
+            z-index: 500;
+            -webkit-transform: scale(1.2);
+            -moz-transform: scale(1.2);
+            -ms-transform: scale(1.2);
+            -o-transform: scale(1.2);
+            transform: scale(1.2); }
         .gameContainer .gridContainerOuter .gridContainerInner .mainGrid .bit {
           position: absolute;
           background-color: #ffffff;

@@ -123,13 +123,19 @@ GameManager.prototype.restart= function () {
 GameManager.prototype.play=function(clickedTile){
     var self=this;
     clickedTile.isVisible=false;
-    var directions=this.masterLogic.directions(clickedTile.position());
-    if(directions){
-        var scoreOfBit=parseInt(clickedTile.value/directions.length);
-        directions.forEach(function (direction) {
+    var availableDirections=this.masterLogic.directions(clickedTile.position());
+    if(availableDirections){
+        var scoreOfBit=parseInt(clickedTile.value/availableDirections.length);
+        availableDirections.forEach(function (direction) {
             var nextTile=self.gridManager.findNextTile(clickedTile.position(),direction);
             if(nextTile!=null){
                 self.bitManager.moveBit(direction,clickedTile.position(),nextTile.position(),scoreOfBit);
+            }else{
+                console.log('next tile not found for ',direction,directions);
+                if(direction==directions.up){
+                    console.log('up');
+                    self.bitManager.moveBit(direction,clickedTile.position(),{x:clickedTile.x,y:-1});
+                }
             }
         });
     }

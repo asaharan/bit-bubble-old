@@ -12,7 +12,7 @@ module.exports = function(grunt) {
         },
         concat: {
             options: {
-                banner:"/*!\n * BubbleUp\n * http://github.com/asaharan/bubbleUp\n * @licence MIT\n*/\n",
+                banner:"/*!\n * Bit Bubble\n * http://github.com/asaharan/bit-bubble\n * @licence MIT\n*/\n",
                 separator: ';\n',
                 stripBanner:true,
                 process: function(src, filepath) {
@@ -26,7 +26,7 @@ module.exports = function(grunt) {
         },
         uglify:{
             options: {
-                banner:"/*!\n * BubbleUp\n * http://github.com/asaharan/bubbleUp\n * @licence MIT\n*/\n'use strict';\n",
+                banner:"/*!\n * Bit Bubble\n * http://github.com/asaharan/bit-bubble\n * @licence MIT\n*/\n'use strict';\n",
                 mangle: false,
                 sourceMap:true,
             },

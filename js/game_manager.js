@@ -24,17 +24,14 @@ GameManager.prototype.play=function(clickedTile){
                 self.bitManager.moveBit(direction,clickedTile.position(),nextTile.position(),scoreOfBit);
             }else{
                 console.log('next tile not found for ',direction,directions);
-                if(direction==directions.up){
-                    console.log('up');
-                    self.bitManager.moveBit(direction,clickedTile.position(),{x:clickedTile.x,y:-1});
-                }
+                self.bitManager.moveBit(direction,clickedTile.position(),clickedTile.position(),scoreOfBit,true);
             }
         });
     }
     this.gridManager.applyChanges();
 };
 GameManager.prototype.onMerge= function (mergeDetails) {//this will called from bit manager when bit animation is over
-    console.log('bit animation over and merge details are: ',mergeDetails,'now it should be updated now')
+    //console.log('bit animation over and merge details are: ',mergeDetails,'now it should be updated now')
     var tileToBeUpdated=this.gridManager.findTileByPosition(mergeDetails.position);
     tileToBeUpdated.nextValue=tileToBeUpdated.value+mergeDetails.valueTobeAdded;
     this.gridManager.applyChanges();

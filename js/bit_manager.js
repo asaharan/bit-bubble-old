@@ -25,6 +25,8 @@ Bit.prototype.createHTMLBit= function () {
 Bit.prototype.applyClasses=function(){
     this.htmlNode.setAttribute('class',this.classList.join(' '));
 };
+
+
 function BitManager(){
     this.bits={};
     this.events=[];
@@ -43,7 +45,7 @@ BitManager.prototype.setup= function () {
 /*
 *@{number} bitIndex is direction of bit
  */
-BitManager.prototype.moveBit=function(bitIndex,initialPosition,finalPosition,bitValue){
+BitManager.prototype.moveBit=function(bitIndex,initialPosition,finalPosition,bitValue,destroy){
     var self=this;
     var bit=this.bits[bitIndex];
     bit.value=bitValue;
@@ -56,16 +58,25 @@ BitManager.prototype.moveBit=function(bitIndex,initialPosition,finalPosition,bit
     window.requestAnimationFrame(function () {
         bit.x=finalPosition.x;
         bit.y=finalPosition.y;
-        console.log(bit);
+        //console.log(bit);
         bit.classList[3]=bit.getPositionClass();
         bit.classList[2]='visible';
         bit.classList[4]='transition';
+        if(destroy==true){
+            //this means this bit should be thrown away
+            console.log(bitIndex,initialPosition,finalPosition,bitValue);
+            bit.classList[5]='destroy-'+bitIndex;
+        }
         bit.applyClasses();
         setTimeout(function () {
             bit.classList.length=2;
             bit.htmlNode.textContent='';
             bit.applyClasses();
-            self.emit('mergeComplete',{position:finalPosition,valueTobeAdded:bitValue});
+            if(destroy==true){
+
+            }else{
+                self.emit('mergeComplete',{position:finalPosition,valueTobeAdded:bitValue});
+            }
         },400);
     });
 };

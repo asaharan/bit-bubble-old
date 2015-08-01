@@ -2,6 +2,7 @@
  * Created by amitkum on 20/7/15.
  */
 function Grid(){
+    var self=this;
     this.events=[];
     this.grid=[];//grid will be array of tiles
     this.previousGrid=[];
@@ -12,7 +13,11 @@ function Grid(){
     this.gridContainerInner=document.querySelector('.gridContainerInner');
     this.backgroundGrid=document.querySelector('.backgroundGrid');
     this.mainGrid=document.querySelector('.mainGrid');
-    this.setup();
+
+    console.log('animation frame is',window.requestAnimationFrame);
+    window.requestAnimationFrame(function () {
+        self.setup();
+    });
 }
 Grid.prototype.setup= function () {
     var i,j;
@@ -26,6 +31,7 @@ Grid.prototype.setup= function () {
             }else{
                 tile=this.createTile({x:i,y:j},this.initialValue,false);
             }
+            console.log('mainGrid is '+this.mainGrid);
             tile.addEventListener('click',this.onTileClick.bind(this));
             this.mainGrid.appendChild(tile);
         }

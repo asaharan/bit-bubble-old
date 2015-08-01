@@ -1,15 +1,45 @@
 /*!
- * BubbleUp
- * http://github.com/asaharan/bubbleUp
+ * Bit Bubble
+ * http://github.com/asaharan/bit-bubble
  * @licence MIT
 */
+/*!
+ * js/animation_polyfill.js
+*/
+/**
+ * Created by amitkum on 20/7/15.
+ */
+(function() {
+    var lastTime = 0;
+    var vendors = ['ms', 'moz', 'webkit', 'o'];
+    for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+        window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+        window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame']
+            || window[vendors[x]+'CancelRequestAnimationFrame'];
+    }
+
+    if (!window.requestAnimationFrame)
+        window.requestAnimationFrame = function(callback, element) {
+            var currTime = new Date().getTime();
+            var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+            var id = window.setTimeout(function() { callback(currTime + timeToCall); },
+                timeToCall);
+            lastTime = currTime + timeToCall;
+            return id;
+        };
+
+    if (!window.cancelAnimationFrame)
+        window.cancelAnimationFrame = function(id) {
+            clearTimeout(id);
+        };
+}());;
 /*!
  * js/application.js
 */
 /**
  * Created by amitkum on 20/7/15.
  */
-var size= 5,directions={up:1,right:2,down:3,left:4};
+var size= 6,directions={up:1,right:2,down:3,left:4};
 var game;
 var initialValue=512,width=502,minSpace=10;
 window.requestAnimationFrame(function () {
@@ -45,6 +75,8 @@ Bit.prototype.createHTMLBit= function () {
 Bit.prototype.applyClasses=function(){
     this.htmlNode.setAttribute('class',this.classList.join(' '));
 };
+
+
 function BitManager(){
     this.bits={};
     this.events=[];
@@ -63,7 +95,7 @@ BitManager.prototype.setup= function () {
 /*
 *@{number} bitIndex is direction of bit
  */
-BitManager.prototype.moveBit=function(bitIndex,initialPosition,finalPosition,bitValue){
+BitManager.prototype.moveBit=function(bitIndex,initialPosition,finalPosition,bitValue,destroy){
     var self=this;
     var bit=this.bits[bitIndex];
     bit.value=bitValue;
@@ -76,16 +108,25 @@ BitManager.prototype.moveBit=function(bitIndex,initialPosition,finalPosition,bit
     window.requestAnimationFrame(function () {
         bit.x=finalPosition.x;
         bit.y=finalPosition.y;
-        console.log(bit);
+        //console.log(bit);
         bit.classList[3]=bit.getPositionClass();
         bit.classList[2]='visible';
         bit.classList[4]='transition';
+        if(destroy==true){
+            //this means this bit should be thrown away
+            console.log(bitIndex,initialPosition,finalPosition,bitValue);
+            bit.classList[5]='destroy-'+bitIndex;
+        }
         bit.applyClasses();
         setTimeout(function () {
             bit.classList.length=2;
             bit.htmlNode.textContent='';
             bit.applyClasses();
-            self.emit('mergeComplete',{position:finalPosition,valueTobeAdded:bitValue});
+            if(destroy==true){
+
+            }else{
+                self.emit('mergeComplete',{position:finalPosition,valueTobeAdded:bitValue});
+            }
         },400);
     });
 };
@@ -132,17 +173,14 @@ GameManager.prototype.play=function(clickedTile){
                 self.bitManager.moveBit(direction,clickedTile.position(),nextTile.position(),scoreOfBit);
             }else{
                 console.log('next tile not found for ',direction,directions);
-                if(direction==directions.up){
-                    console.log('up');
-                    self.bitManager.moveBit(direction,clickedTile.position(),{x:clickedTile.x,y:-1});
-                }
+                self.bitManager.moveBit(direction,clickedTile.position(),clickedTile.position(),scoreOfBit,true);
             }
         });
     }
     this.gridManager.applyChanges();
 };
 GameManager.prototype.onMerge= function (mergeDetails) {//this will called from bit manager when bit animation is over
-    console.log('bit animation over and merge details are: ',mergeDetails,'now it should be updated now')
+    //console.log('bit animation over and merge details are: ',mergeDetails,'now it should be updated now')
     var tileToBeUpdated=this.gridManager.findTileByPosition(mergeDetails.position);
     tileToBeUpdated.nextValue=tileToBeUpdated.value+mergeDetails.valueTobeAdded;
     this.gridManager.applyChanges();
@@ -154,6 +192,7 @@ GameManager.prototype.onMerge= function (mergeDetails) {//this will called from 
  * Created by amitkum on 20/7/15.
  */
 function Grid(){
+    var self=this;
     this.events=[];
     this.grid=[];//grid will be array of tiles
     this.previousGrid=[];
@@ -164,7 +203,11 @@ function Grid(){
     this.gridContainerInner=document.querySelector('.gridContainerInner');
     this.backgroundGrid=document.querySelector('.backgroundGrid');
     this.mainGrid=document.querySelector('.mainGrid');
-    this.setup();
+
+    console.log('animation frame is',window.requestAnimationFrame);
+    window.requestAnimationFrame(function () {
+        self.setup();
+    });
 }
 Grid.prototype.setup= function () {
     var i,j;
@@ -178,6 +221,7 @@ Grid.prototype.setup= function () {
             }else{
                 tile=this.createTile({x:i,y:j},this.initialValue,false);
             }
+            console.log('mainGrid is '+this.mainGrid);
             tile.addEventListener('click',this.onTileClick.bind(this));
             this.mainGrid.appendChild(tile);
         }

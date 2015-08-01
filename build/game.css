@@ -209,5 +209,13 @@ body {
             z-index: -5;
             background-color: transparent;
             color: transparent; }
+          .gameContainer .gridContainerOuter .gridContainerInner .mainGrid .bit.destroy-1 {
+            top: -120px; }
+          .gameContainer .gridContainerOuter .gridContainerInner .mainGrid .bit.destroy-2 {
+            left: calc(100% + 120px); }
+          .gameContainer .gridContainerOuter .gridContainerInner .mainGrid .bit.destroy-3 {
+            top: calc(100% + 120px); }
+          .gameContainer .gridContainerOuter .gridContainerInner .mainGrid .bit.destroy-4 {
+            left: -120px; }
 
 /*# sourceMappingURL=game.css.map */

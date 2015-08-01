@@ -130,6 +130,21 @@ body {
   .gameContainer *, .gameContainer *:after, .gameContainer *:before {
     font-family: "roboto-regular";
     box-sizing: border-box; }
+  .gameContainer .header {
+    margin-bottom: 5px; }
+    .gameContainer .header .scores {
+      display: none; }
+    .gameContainer .header .nameAndDescription {
+      font-size: 16px; }
+      .gameContainer .header .nameAndDescription .name {
+        font-size: 24px;
+        font-weight: bold;
+        display: inline-block; }
+      .gameContainer .header .nameAndDescription .desc {
+        display: inline-block; }
+      .gameContainer .header .nameAndDescription .newGame {
+        position: relative;
+        float: right; }
   .gameContainer .gridContainerOuter {
     background-color: #f5f5f5;
     border: solid 1px #d8d8d8;
@@ -161,8 +176,9 @@ body {
             -ms-transform: scale(0.6);
             -o-transform: scale(0.6);
             transform: scale(0.6); }
-          .gameContainer .gridContainerOuter .gridContainerInner .mainGrid .tile.fixed.fixed {
-            background-color: #000000;
+          .gameContainer .gridContainerOuter .gridContainerInner .mainGrid .tile.fixed {
+            background-color: #777;
+            color: #ffffff;
             z-index: 505; }
           .gameContainer .gridContainerOuter .gridContainerInner .mainGrid .tile.updated {
             z-index: 500;

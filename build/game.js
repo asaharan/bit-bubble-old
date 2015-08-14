@@ -43,8 +43,19 @@ var size= 6,directions={up:1,right:2,down:3,left:4};
 var game;
 var initialValue=512,width=502,minSpace=10;
 window.requestAnimationFrame(function () {
-    game=new GameManager(Grid,Stylesheet,BitManager,MasterLogic);
-});;
+	var s=window.localStorage['GridSize'];
+	if(s!=undefined||s!=null){
+		size=parseInt(s);
+	}else{
+		console.log(s);
+	}
+	document.querySelector('.levelselect').value=size;
+	new GameManager(Grid,Stylesheet,BitManager,MasterLogic);
+});
+function resizeGrid(v){
+	size=parseInt(v);
+	window.localStorage['GridSize']=v;
+};
 /*!
  * js/bit_manager.js
 */
@@ -153,13 +164,26 @@ function GameManager(gridManager,styleSheetManager,bitManager,masterLogic){
     this.bitManager=new bitManager;
     this.masterLogic=new masterLogic;
     this.init();
+    this.xbitManager=bitManager;
+    this.xgridManager=gridManager;
 }
 GameManager.prototype.init= function () {
+    document.querySelector('.newGame').addEventListener('click',this.restart.bind(this));
     this.gridManager.on('tileClick',this.play.bind(this));
     this.bitManager.on('mergeComplete',this.onMerge.bind(this));
 };
 GameManager.prototype.restart= function () {
-
+    var self=this;
+    self.gridManager=null;
+    self.bitManager=null;
+    this.styleSheetManager.setup();
+    document.querySelector('.mainGrid').innerHTML='';
+    window.requestAnimationFrame(function(){
+        self.gridManager=new self.xgridManager;
+        self.bitManager=new self.xbitManager;
+        self.gridManager.on('tileClick',self.play.bind(self));
+        self.bitManager.on('mergeComplete',self.onMerge.bind(self));
+    })
 };
 GameManager.prototype.play=function(clickedTile){
     var self=this;
@@ -204,10 +228,12 @@ function Grid(){
     this.backgroundGrid=document.querySelector('.backgroundGrid');
     this.mainGrid=document.querySelector('.mainGrid');
 
-    console.log('animation frame is',window.requestAnimationFrame);
     window.requestAnimationFrame(function () {
         self.setup();
     });
+}
+Grid.prototype.emptyGrid=function(){
+    this.applyChanges();
 }
 Grid.prototype.setup= function () {
     var i,j;
@@ -221,7 +247,7 @@ Grid.prototype.setup= function () {
             }else{
                 tile=this.createTile({x:i,y:j},this.initialValue,false);
             }
-            console.log('mainGrid is '+this.mainGrid);
+            // console.log('mainGrid is '+this.mainGrid);
             tile.addEventListener('click',this.onTileClick.bind(this));
             this.mainGrid.appendChild(tile);
         }
@@ -399,12 +425,16 @@ MasterLogic.prototype.isEdge= function (tile) {
  * Created by amitkum on 20/7/15.
  */
 function Stylesheet(){
-    this.size=size;
-    this.width=width - 2;
-    this.minSpace=minSpace;
     this.setup();
 }
 Stylesheet.prototype.setup= function () {
+    this.size=size;
+    this.width=width - 2;
+    this.minSpace=minSpace;
+    var s=document.querySelector('#flexStyleSheet');
+    if(s!=null){
+        s.remove();
+    }
     this.generateTileWidth();
     this.generateSpaceBetweenTiles();
     this.createStyleSheet();

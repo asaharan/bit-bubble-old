@@ -14,10 +14,12 @@ function Grid(){
     this.backgroundGrid=document.querySelector('.backgroundGrid');
     this.mainGrid=document.querySelector('.mainGrid');
 
-    console.log('animation frame is',window.requestAnimationFrame);
     window.requestAnimationFrame(function () {
         self.setup();
     });
+}
+Grid.prototype.emptyGrid=function(){
+    this.applyChanges();
 }
 Grid.prototype.setup= function () {
     var i,j;
@@ -31,7 +33,7 @@ Grid.prototype.setup= function () {
             }else{
                 tile=this.createTile({x:i,y:j},this.initialValue,false);
             }
-            console.log('mainGrid is '+this.mainGrid);
+            // console.log('mainGrid is '+this.mainGrid);
             tile.addEventListener('click',this.onTileClick.bind(this));
             this.mainGrid.appendChild(tile);
         }

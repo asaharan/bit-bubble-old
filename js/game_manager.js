@@ -4,13 +4,26 @@ function GameManager(gridManager,styleSheetManager,bitManager,masterLogic){
     this.bitManager=new bitManager;
     this.masterLogic=new masterLogic;
     this.init();
+    this.xbitManager=bitManager;
+    this.xgridManager=gridManager;
 }
 GameManager.prototype.init= function () {
+    document.querySelector('.newGame').addEventListener('click',this.restart.bind(this));
     this.gridManager.on('tileClick',this.play.bind(this));
     this.bitManager.on('mergeComplete',this.onMerge.bind(this));
 };
 GameManager.prototype.restart= function () {
-
+    var self=this;
+    self.gridManager=null;
+    self.bitManager=null;
+    this.styleSheetManager.setup();
+    document.querySelector('.mainGrid').innerHTML='';
+    window.requestAnimationFrame(function(){
+        self.gridManager=new self.xgridManager;
+        self.bitManager=new self.xbitManager;
+        self.gridManager.on('tileClick',self.play.bind(self));
+        self.bitManager.on('mergeComplete',self.onMerge.bind(self));
+    })
 };
 GameManager.prototype.play=function(clickedTile){
     var self=this;

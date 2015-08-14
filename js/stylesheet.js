@@ -2,12 +2,16 @@
  * Created by amitkum on 20/7/15.
  */
 function Stylesheet(){
-    this.size=size;
-    this.width=width - 2;
-    this.minSpace=minSpace;
     this.setup();
 }
 Stylesheet.prototype.setup= function () {
+    this.size=size;
+    this.width=width - 2;
+    this.minSpace=minSpace;
+    var s=document.querySelector('#flexStyleSheet');
+    if(s!=null){
+        s.remove();
+    }
     this.generateTileWidth();
     this.generateSpaceBetweenTiles();
     this.createStyleSheet();

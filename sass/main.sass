@@ -11,6 +11,60 @@ $roboto-font-path: "../build/fonts"
     font-family: 'roboto-regular'
     box-sizing: border-box
 
+  .header
+    margin-bottom: 5px
+    .scores
+      display: none
+    .nameAndDescription
+      .first
+        line-height: 40px
+        font-size: 16px
+        .name
+          font-size: 24px
+          font-weight: bold
+          display: inline-block
+        .right_options
+          display: inline-block
+          float: right
+          .level
+            display: inline-block
+            float: left
+            width: 80px
+            text-align: center
+            border: 1px solid #c0c8c9
+            background-color: #fff
+            height: 30px
+            color: #777
+            margin-right: 20px
+            border-radius: 2px
+            outline: none
+            option
+              color: #777
+            &:focus,&:hover
+              border-color: #FF4E47
+              color: #FF4E47
+          .newGame
+            cursor: pointer
+            float: left
+            position: relative
+            height: 30px
+            border-radius: 2px
+            outline: none
+            color: #F95E58
+            background: #fff
+            border: solid 1px #FF4E47
+            transition: all ease 300ms
+            &:focus,&:hover
+              background-color: #FF4E47
+              color: #fff
+              border: solid 1px #FF4E47
+        .desc
+          display: block
+          line-height: 22px
+          height: 22px
+          .d
+            display: inline-block
+            float: left
   .gridContainerOuter
     background-color: $gridContainerOuterBackgroundColor
     border: solid $gridContainerOuterBorderWidth $gridContainerOuterBorderColor
@@ -39,8 +93,9 @@ $roboto-font-path: "../build/fonts"
             z-index: -100
             opacity: 0
             @include transform(scale(0.6))
-          &.fixed.fixed
-            background-color: #000000
+          &.fixed
+            background-color: #777
+            color: #ffffff
             z-index: 505
           &.updated
             z-index: 500
@@ -80,3 +135,5 @@ $roboto-font-path: "../build/fonts"
             top: calc(100% + 120px)
           &.destroy-4
             left: -120px
+
+

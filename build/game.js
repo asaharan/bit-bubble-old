@@ -433,7 +433,7 @@ Stylesheet.prototype.setup= function () {
     this.minSpace=minSpace;
     var s=document.querySelector('#flexStyleSheet');
     if(s!=null){
-        s.remove();
+        s.parentNode.removeChild(s);
     }
     this.generateTileWidth();
     this.generateSpaceBetweenTiles();

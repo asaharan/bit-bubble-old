@@ -134,17 +134,55 @@ body {
     margin-bottom: 5px; }
     .gameContainer .header .scores {
       display: none; }
-    .gameContainer .header .nameAndDescription {
+    .gameContainer .header .nameAndDescription .first {
+      line-height: 40px;
       font-size: 16px; }
-      .gameContainer .header .nameAndDescription .name {
+      .gameContainer .header .nameAndDescription .first .name {
         font-size: 24px;
         font-weight: bold;
         display: inline-block; }
-      .gameContainer .header .nameAndDescription .desc {
-        display: inline-block; }
-      .gameContainer .header .nameAndDescription .newGame {
-        position: relative;
+      .gameContainer .header .nameAndDescription .first .right_options {
+        display: inline-block;
         float: right; }
+        .gameContainer .header .nameAndDescription .first .right_options .level {
+          display: inline-block;
+          float: left;
+          width: 80px;
+          text-align: center;
+          border: 1px solid #c0c8c9;
+          background-color: #fff;
+          height: 30px;
+          color: #777;
+          margin-right: 20px;
+          border-radius: 2px;
+          outline: none; }
+          .gameContainer .header .nameAndDescription .first .right_options .level option {
+            color: #777; }
+          .gameContainer .header .nameAndDescription .first .right_options .level:focus, .gameContainer .header .nameAndDescription .first .right_options .level:hover {
+            border-color: #FF4E47;
+            color: #FF4E47; }
+        .gameContainer .header .nameAndDescription .first .right_options .newGame {
+          cursor: pointer;
+          float: left;
+          position: relative;
+          height: 30px;
+          border-radius: 2px;
+          outline: none;
+          color: #F95E58;
+          background: #fff;
+          border: solid 1px #FF4E47;
+          transition: all ease 300ms; }
+          .gameContainer .header .nameAndDescription .first .right_options .newGame:focus, .gameContainer .header .nameAndDescription .first .right_options .newGame:hover {
+            background-color: #FF4E47;
+            color: #fff;
+            border: solid 1px #FF4E47; }
+      .gameContainer .header .nameAndDescription .first .desc {
+        display: block;
+        line-height: 22px;
+        height: 22px; }
+        .gameContainer .header .nameAndDescription .first .desc .d {
+          display: inline-block;
+          float: left; }
   .gameContainer .gridContainerOuter {
     background-color: #f5f5f5;
     border: solid 1px #d8d8d8;

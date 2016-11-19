@@ -32,6 +32,7 @@ function BitManager(){
     this.events=[];
     this.mainGrid=document.querySelector('.mainGrid');
     this.setup();
+    this.time = 400;
 }
 BitManager.prototype.setup= function () {
     this.bits[directions.up]=new Bit('up');
@@ -56,28 +57,30 @@ BitManager.prototype.moveBit=function(bitIndex,initialPosition,finalPosition,bit
     bit.classList[3]=bit.getPositionClass();
     bit.applyClasses();
     window.requestAnimationFrame(function () {
-        bit.x=finalPosition.x;
-        bit.y=finalPosition.y;
-        //console.log(bit);
-        bit.classList[3]=bit.getPositionClass();
-        bit.classList[2]='visible';
-        bit.classList[4]='transition';
-        if(destroy==true){
-            //this means this bit should be thrown away
-            console.log(bitIndex,initialPosition,finalPosition,bitValue);
-            bit.classList[5]='destroy-'+bitIndex;
-        }
-        bit.applyClasses();
-        setTimeout(function () {
-            bit.classList.length=2;
-            bit.htmlNode.textContent='';
-            bit.applyClasses();
+        window.requestAnimationFrame(function(){
+            bit.x=finalPosition.x;
+            bit.y=finalPosition.y;
+            //console.log(bit);
+            bit.classList[3]=bit.getPositionClass();
+            bit.classList[2]='visible';
+            bit.classList[4]='transition';
             if(destroy==true){
-
-            }else{
-                self.emit('mergeComplete',{position:finalPosition,valueTobeAdded:bitValue});
+                //this means this bit should be thrown away
+                console.log(bitIndex,initialPosition,finalPosition,bitValue);
+                bit.classList[5]='destroy-'+bitIndex;
             }
-        },400);
+            bit.applyClasses();
+            setTimeout(function () {
+                bit.classList.length=2;
+                bit.htmlNode.textContent='';
+                bit.applyClasses();
+                if(destroy==true){
+
+                }else{
+                    self.emit('mergeComplete',{position:finalPosition,valueTobeAdded:bitValue});
+                }
+            },self.time);
+        });
     });
 };
 BitManager.prototype.on= function (event,callback) {

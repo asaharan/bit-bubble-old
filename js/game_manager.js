@@ -8,11 +8,14 @@ function GameManager(gridManager,styleSheetManager,bitManager,masterLogic){
     this.xgridManager=gridManager;
 }
 GameManager.prototype.init= function () {
+    console.log(document.querySelector('.tryAgain'));
     document.querySelector('.newGame').addEventListener('click',this.restart.bind(this));
+    document.querySelector('.tryAgain').addEventListener('click',this.restart.bind(this));
     this.gridManager.on('tileClick',this.play.bind(this));
     this.bitManager.on('mergeComplete',this.onMerge.bind(this));
 };
 GameManager.prototype.restart= function () {
+    document.getElementById('gameOverContainer').setAttribute('class','gameOver');
     var self=this;
     self.gridManager=null;
     self.bitManager=null;
@@ -48,4 +51,11 @@ GameManager.prototype.onMerge= function (mergeDetails) {//this will called from 
     var tileToBeUpdated=this.gridManager.findTileByPosition(mergeDetails.position);
     tileToBeUpdated.nextValue=tileToBeUpdated.value+mergeDetails.valueTobeAdded;
     this.gridManager.applyChanges();
+    if(this.gridManager.isGameOver()){
+        //Game Over
+        setTimeout(function(){
+            document.getElementById('gameOverContainer').setAttribute('class','gameOver open');
+        },300);
+    }
+
 };

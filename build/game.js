@@ -93,6 +93,7 @@ function BitManager(){
     this.events=[];
     this.mainGrid=document.querySelector('.mainGrid');
     this.setup();
+    this.time = 400;
 }
 BitManager.prototype.setup= function () {
     this.bits[directions.up]=new Bit('up');
@@ -117,28 +118,30 @@ BitManager.prototype.moveBit=function(bitIndex,initialPosition,finalPosition,bit
     bit.classList[3]=bit.getPositionClass();
     bit.applyClasses();
     window.requestAnimationFrame(function () {
-        bit.x=finalPosition.x;
-        bit.y=finalPosition.y;
-        //console.log(bit);
-        bit.classList[3]=bit.getPositionClass();
-        bit.classList[2]='visible';
-        bit.classList[4]='transition';
-        if(destroy==true){
-            //this means this bit should be thrown away
-            console.log(bitIndex,initialPosition,finalPosition,bitValue);
-            bit.classList[5]='destroy-'+bitIndex;
-        }
-        bit.applyClasses();
-        setTimeout(function () {
-            bit.classList.length=2;
-            bit.htmlNode.textContent='';
-            bit.applyClasses();
+        window.requestAnimationFrame(function(){
+            bit.x=finalPosition.x;
+            bit.y=finalPosition.y;
+            //console.log(bit);
+            bit.classList[3]=bit.getPositionClass();
+            bit.classList[2]='visible';
+            bit.classList[4]='transition';
             if(destroy==true){
-
-            }else{
-                self.emit('mergeComplete',{position:finalPosition,valueTobeAdded:bitValue});
+                //this means this bit should be thrown away
+                console.log(bitIndex,initialPosition,finalPosition,bitValue);
+                bit.classList[5]='destroy-'+bitIndex;
             }
-        },400);
+            bit.applyClasses();
+            setTimeout(function () {
+                bit.classList.length=2;
+                bit.htmlNode.textContent='';
+                bit.applyClasses();
+                if(destroy==true){
+
+                }else{
+                    self.emit('mergeComplete',{position:finalPosition,valueTobeAdded:bitValue});
+                }
+            },self.time);
+        });
     });
 };
 BitManager.prototype.on= function (event,callback) {
@@ -168,11 +171,14 @@ function GameManager(gridManager,styleSheetManager,bitManager,masterLogic){
     this.xgridManager=gridManager;
 }
 GameManager.prototype.init= function () {
+    console.log(document.querySelector('.tryAgain'));
     document.querySelector('.newGame').addEventListener('click',this.restart.bind(this));
+    document.querySelector('.tryAgain').addEventListener('click',this.restart.bind(this));
     this.gridManager.on('tileClick',this.play.bind(this));
     this.bitManager.on('mergeComplete',this.onMerge.bind(this));
 };
 GameManager.prototype.restart= function () {
+    document.getElementById('gameOverContainer').setAttribute('class','gameOver');
     var self=this;
     self.gridManager=null;
     self.bitManager=null;
@@ -208,6 +214,13 @@ GameManager.prototype.onMerge= function (mergeDetails) {//this will called from 
     var tileToBeUpdated=this.gridManager.findTileByPosition(mergeDetails.position);
     tileToBeUpdated.nextValue=tileToBeUpdated.value+mergeDetails.valueTobeAdded;
     this.gridManager.applyChanges();
+    if(this.gridManager.isGameOver()){
+        //Game Over
+        setTimeout(function(){
+            document.getElementById('gameOverContainer').setAttribute('class','gameOver open');
+        },300);
+    }
+
 };;
 /*!
  * js/grid_manager.js
@@ -243,7 +256,6 @@ Grid.prototype.setup= function () {
             var tile;
             if(i==randomPosition.x&&j==randomPosition.y){
                 tile=this.createTile({x:i,y:j},this.initialValue,true);
-                this.fixedTile=tile;
             }else{
                 tile=this.createTile({x:i,y:j},this.initialValue,false);
             }
@@ -257,6 +269,8 @@ Grid.prototype.createTile= function (position,value,isFixed) {
     var tile=new Tile(position.x,position.y,value);
     if(isFixed==true){
         tile.classList[4]='fixed';
+        tile.isFixed = true;
+        this.fixedTile = tile;
     }
     tile.isVisible=true;
     this.grid.push(tile);
@@ -272,6 +286,7 @@ Grid.prototype.getRandomPosition= function () {
 * Applies changes to grid, if any
 **/
 Grid.prototype.applyChanges= function () {
+    console.log('grid',this.grid);
     this.grid.forEach(function (tile) {
        tile.applyChanges();
     });
@@ -294,7 +309,7 @@ Grid.prototype.emit= function (event,data) {
     }
 };
 Grid.prototype.onTileClick= function (event) {
-    if(event.target==this.fixedTile || this.findTileById(event.target.id).isVisible==false){//clicked on fixed tile
+    if(event.target==this.fixedTile.htmlNode || this.findTileById(event.target.id).isVisible==false){//clicked on fixed tile
         console.log(event.target);
         return;
     }
@@ -359,7 +374,29 @@ Grid.prototype.findTileByPosition= function (position) {
         }
     });
     return tileToReturn;
-};;
+};
+
+Grid.prototype.isGameOver = function(){
+    var isOver = true;
+    for( a in directions){
+        if(this.findNextTile(this.fixedTile.position(),directions[a])!=null){
+            isOver = false;
+            console.warn('isOver',directions[a], this.findNextTile(this.fixedTile.position(),directions[a]));
+            break;
+        }
+    }
+    if(isOver){
+        console.log('game over');
+    }else{
+        console.log('game not over');
+    }
+    return isOver;
+    console.log('findNextTile fixedTile left',this.findNextTile(this.fixedTile.position(),[directions.left] ));
+    console.log('findNextTile fixedTile right',this.findNextTile(this.fixedTile.position(),[directions.right] ));
+    console.log('findNextTile fixedTile down',this.findNextTile(this.fixedTile.position(),[directions.down] ));
+    console.log('findNextTile fixedTile up',this.findNextTile(this.fixedTile.position(),[directions.up] ));
+    // console.log(this.fixedTile);  
+};
 /*!
  * js/master_logic.js
 */
@@ -498,7 +535,9 @@ function Tile(x,y,value){
     this.value=value;
     this.nextValue=null;
     this.isVisible=true;
+    this.isFixed = false;
     this.htmlNode=null;
+    this.time = 200;
     this.classList=['tile',this.positionClass(),'visible','new'];//4th class for fixed and 5th for updated
 }
 Tile.prototype.position= function () {
@@ -523,7 +562,7 @@ Tile.prototype.applyChanges= function () {
         setTimeout(function () {
             self.classList[5]='';
             self.applyClasses();
-        },200)
+        },self.time)
     }
     this.applyClasses();
 };

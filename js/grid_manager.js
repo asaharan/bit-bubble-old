@@ -29,7 +29,6 @@ Grid.prototype.setup= function () {
             var tile;
             if(i==randomPosition.x&&j==randomPosition.y){
                 tile=this.createTile({x:i,y:j},this.initialValue,true);
-                this.fixedTile=tile;
             }else{
                 tile=this.createTile({x:i,y:j},this.initialValue,false);
             }
@@ -43,6 +42,8 @@ Grid.prototype.createTile= function (position,value,isFixed) {
     var tile=new Tile(position.x,position.y,value);
     if(isFixed==true){
         tile.classList[4]='fixed';
+        tile.isFixed = true;
+        this.fixedTile = tile;
     }
     tile.isVisible=true;
     this.grid.push(tile);
@@ -58,6 +59,7 @@ Grid.prototype.getRandomPosition= function () {
 * Applies changes to grid, if any
 **/
 Grid.prototype.applyChanges= function () {
+    console.log('grid',this.grid);
     this.grid.forEach(function (tile) {
        tile.applyChanges();
     });
@@ -80,7 +82,7 @@ Grid.prototype.emit= function (event,data) {
     }
 };
 Grid.prototype.onTileClick= function (event) {
-    if(event.target==this.fixedTile || this.findTileById(event.target.id).isVisible==false){//clicked on fixed tile
+    if(event.target==this.fixedTile.htmlNode || this.findTileById(event.target.id).isVisible==false){//clicked on fixed tile
         console.log(event.target);
         return;
     }
@@ -146,3 +148,25 @@ Grid.prototype.findTileByPosition= function (position) {
     });
     return tileToReturn;
 };
+
+Grid.prototype.isGameOver = function(){
+    var isOver = true;
+    for( a in directions){
+        if(this.findNextTile(this.fixedTile.position(),directions[a])!=null){
+            isOver = false;
+            console.warn('isOver',directions[a], this.findNextTile(this.fixedTile.position(),directions[a]));
+            break;
+        }
+    }
+    if(isOver){
+        console.log('game over');
+    }else{
+        console.log('game not over');
+    }
+    return isOver;
+    console.log('findNextTile fixedTile left',this.findNextTile(this.fixedTile.position(),[directions.left] ));
+    console.log('findNextTile fixedTile right',this.findNextTile(this.fixedTile.position(),[directions.right] ));
+    console.log('findNextTile fixedTile down',this.findNextTile(this.fixedTile.position(),[directions.down] ));
+    console.log('findNextTile fixedTile up',this.findNextTile(this.fixedTile.position(),[directions.up] ));
+    // console.log(this.fixedTile);  
+}

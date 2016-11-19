@@ -11,7 +11,9 @@ function Tile(x,y,value){
     this.value=value;
     this.nextValue=null;
     this.isVisible=true;
+    this.isFixed = false;
     this.htmlNode=null;
+    this.time = 200;
     this.classList=['tile',this.positionClass(),'visible','new'];//4th class for fixed and 5th for updated
 }
 Tile.prototype.position= function () {
@@ -36,7 +38,7 @@ Tile.prototype.applyChanges= function () {
         setTimeout(function () {
             self.classList[5]='';
             self.applyClasses();
-        },200)
+        },self.time)
     }
     this.applyClasses();
 };

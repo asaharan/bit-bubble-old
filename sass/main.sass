@@ -74,11 +74,13 @@ $roboto-font-path: "../build/fonts"
       position: absolute
       left: 0
       top: 0
+      z-index: 10
       .backgroundGrid
         position: absolute
 
       .mainGrid
         position: absolute
+        @include user-select(none)
 
         .tile
           position: absolute
@@ -88,13 +90,15 @@ $roboto-font-path: "../build/fonts"
           border-radius: 3px
           z-index: 100
           opacity: 1
+          cursor: pointer
           @include transition(all $bitAnimationTime/4 ease,z-index $bitAnimationTime ease,opacity $bitAnimationTime ease)
           &.invisible
             z-index: -100
             opacity: 0
-            @include transform(scale(0.6))
+            @include transform(scale(0.9))
           &.fixed
-            background-color: #777
+            cursor: default
+            background-color: $fixedTileColor
             color: #ffffff
             z-index: 505
           &.updated
@@ -107,20 +111,21 @@ $roboto-font-path: "../build/fonts"
           color: $bitColor
           text-align: center
           z-index: -5
+          opacity: 0.86
           @include transform(scale(0.5))
           @include transition(none)
           &.transition
             @include transition(all $bitAnimationTime ease-in, z-index $bitAnimationTime/5 linear)
           &.left
-            border-radius: 50% 10% 10% 50%
+            // border-radius: 50% 10% 10% 50%
           &.right
-            border-radius: 10% 50% 50% 10%
+            // border-radius: 10% 50% 50% 10%
           &.up
-            border-radius: 50% 50% 10% 10%
+            // border-radius: 50% 50% 10% 10%
           &.down
-            border-radius: 10% 10% 50% 50%
+            // border-radius: 10% 10% 50% 50%
           &.visible
-            border-radius: 50%
+            // border-radius: 50%
             @include transform(scale(0.7))
             z-index: 5
           &.invisible
@@ -137,3 +142,49 @@ $roboto-font-path: "../build/fonts"
             left: -120px
 
 
+
+
+
+.gameOver
+  position: absolute
+  top: 0
+  left: 0
+  bottom: 0
+  right: 0
+  background: rgba(238, 228, 218, 0.73)
+  z-index: 1
+  @include display(flex)
+  @include flex-direction(column)
+  @include justify-content(center)
+  @include align-items(center)
+  z-index: -5
+  visibility: hidden
+  &.open
+    visibility: visible
+    z-index: 100
+    button,.game-over-title
+      @include transform(none)
+      opacity: 1
+  button
+    border: none
+    color: #fff
+    background: #8f7a66
+    font-weight: bold
+    padding: 0 24px
+    border-radius: 3px
+    line-height: 42px
+    font-size: 14px
+    text-transform: uppercase
+    align-self: center
+    cursor: pointer
+    @include transition(all ease 550ms 100ms)
+    @include transform(translateY(240px))
+    opacity: 0
+
+  .game-over-title
+    font-size: 40px
+    margin-bottom: 12px
+    font-weight: bold
+    @include transition(all ease 400ms)
+    @include transform(translateY(200px))
+    opacity: 0
